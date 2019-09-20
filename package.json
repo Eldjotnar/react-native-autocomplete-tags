@@ -1,0 +1,15 @@
+{
+  "name": "react-native-autocomplete-tags",
+  "version": "1.0.0",
+  "description": "Autocomplete text input with tags",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "metro-react-native-babel-preset": "^0.56.0"
+  },
+  "dependencies": {}
+}
