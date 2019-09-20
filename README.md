@@ -2,7 +2,7 @@
 
 A quick and easy solutions for projects that need an input with both autocomplete and tags
 
-[alt](example.gif "demo")
+<img src="example.gif" style="max-width: 500px">
 
 ## Features
 
