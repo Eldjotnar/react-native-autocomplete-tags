@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, View, Text } from "react-native";
 import AutocompleteTags from "react-native-autocomplete-tags";
-// import AutocompleteTags from '../components/molecules/AutocompleteTags';
 
 const suggestions = [
   { name: "Boris Yeltsin", email: "boris.yeltsin@abc.com " },
