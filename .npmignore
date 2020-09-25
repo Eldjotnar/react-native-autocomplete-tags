@@ -13,3 +13,9 @@ demo
 
 # osx
 .DS_Store
+
+# dev files
+.prettierrc.js
+eslintrc.js
+example.gif
+tsconfig.json

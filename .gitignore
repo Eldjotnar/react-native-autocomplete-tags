@@ -5,7 +5,7 @@ npm-debug.log
 # Runtime data
 tmp
 build
-dist
+lib
 
 # Dependency directory
 node_modules

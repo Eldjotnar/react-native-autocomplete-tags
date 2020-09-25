@@ -6,11 +6,16 @@ A quick and easy solutions for projects that need an input with both autocomplet
 
 ## Features
 
-- custom tag and suggestions
-- fully style-able
-- extractors for tags and for suggestions
+- custom tag and suggestions components
+- separate extractors for tags and for suggestions
 - easy to integrate and use
-- controlled text input
+- configurable
+
+## What's new in version 2?
+
+- no more mandatory controlled TextInput (although you still can if you want)
+- TypeScript support!
+- no more tag/suggestion styles - if you need custom styles, use `renderTag` or `renderSuggestion` instead
 
 ## Installation
 
@@ -26,96 +31,65 @@ npm install react-native-autocomplete-tags --save
 
 ## Dependency
 
-**Requires RN >= 0.59**
+**Requires RN >= 0.63**
+If using RN < 0.63, use v1 instead.
 
 ## Useage
 
-Also see [the demo projects](demo/demo.js)
+Also see [the demo projects](demo)
 
 ```jsx
-const suggestions = [
-  { name: "Boris Yeltsin", email: "boris.yeltsin@abc.com" },
-  { name: "Tom Boboby", email: "tom.boboy@abc.com" }
-];
+const suggestions = ['apple', 'orange', 'banana', 'kiwi'];
 
-const Demo = () => {
-  const [text, setText] = useState("");
-  const [tags, setTags] = useState([
-    { name: "Fred Hendriks", email: "fred.hendricks@abc.com" }
-  ]);
+const SimpleExample = () => {
+  const [tags, setTags] = useState<string[]>([]);
 
-  const onChangeText = text => {
-    setText(text);
-
-    const lastTyped = text.charAt(text.length - 1);
-    const parseWhen = [",", " ", ";", "\n"];
-
-    if (parseWhen.indexOf(lastTyped) > -1) {
-      setTags(tags => [...tags, { name: text, email: text }]);
-      setText("");
-    }
-  };
-
-  const handleSuggestionPress = suggestion => {
-    setText("");
-    setTags(tags => [...tags, suggestion]);
-  };
+  const labelExtractor = (tag: string) => tag;
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.rowContainer}>
-        <Text>To: </Text>
-        <AutocompleteTags
-          tags={tags}
-          labelExtractor={item => item.name}
-          text={text}
-          onChangeText={onChangeText}
-          onChangeTags={tags => setTags(tags)}
-          suggestions={suggestions}
-          suggestionExtractor={item => item.email}
-          onSuggestionPress={handleSuggestionPress}
-        />
-      </View>
-    </SafeAreaView>
+    <AutocompleteTags
+      tags={tags}
+      suggestions={suggestions}
+      onChangeTags={setTags}
+      labelExtractor={labelExtractor}
+    />
   );
 };
+
+export default SimpleExample;
+
 ```
 
 ## Props
 
-| Prop                      | type              | Description                                                          | required | default                  |
-| ------------------------- | ----------------- | -------------------------------------------------------------------- | -------- | ------------------------ |
-| **`tags`**                | `array` of any    | The current tags to be rendered                                      | `true`   |                          |
-| **`labelExtractor`**      | `function`        | Determines what property of `tags` is displayed                      | `true`   |                          |
-| **`text`**                | `string`          | value of `TextInput`                                                 | `true`   |                          |
-| **`onChangeText`**        | `function`        | called when `text` changes, should also handle tag creation          | `true`   |                          |
-| **`onChangeTags`**        | `function`        | called when tags change (i.e. by deleting), should just write `tags` | `true`   |                          |
-| **`minInputWidth`**       | `number`          | minimum width of `TextInput` before jumping to new line              | `false`  | `100`                    |
-| **`suggestions`**         | `array` of any    | All possible suggestions                                             | `false`  | `[]`                     |
-| **`suggestionExtractor`** | `function`        | determines which property of `suggestions` is displayed              | `false`  | same as `labelExtractor` |
-| **`onSuggestionPress`**   | `function`        | called when suggestion is pressed                                    | `false`  | `null`                   |
-| **`onTagPress`**          | `function`        | called when tag is pressed                                           | `false`  | `null`                   |
-| **`renderSuggestion`**    | `function`        | renders a custom suggestion item                                     | `false`  | `null`                   |
-| **`renderTag`**           | `function`        | renders a custom tag                                                 | `false`  | `null`                   |
-| **`filterSuggestions`**   | `function`        | filters suggestions based on `text` (receives `text` as parameter)   | `false`  | `null`                   |
-| **`inputProps`**          | `TextInput` props | any additional props for `TextInput`                                 | `false`  | `null`                   |
-| **`flatListProps`**       | `FlatList` props  | any additional props for `FlatList`                                  | `false`  | `null`                   |
+| Prop                      | type                                                                      | Description                                                                           | required | default                                                  |
+|---------------------------|---------------------------------------------------------------------------|---------------------------------------------------------------------------------------|----------|----------------------------------------------------------|
+| **`tags`**                | `Tag[]`                                                                   | The current tags to be rendered                                                       | yes      |                                                          |
+| **`labelExtractor`**      | `(tag: Tag) => string`                                                    | Determines what property of `tags` is displayed                                       | yes      |                                                          |
+| **`onChangeTags`**        | `(newTags: Tag[]) => void`                                                | called when tags change (i.e. by deleting), should be used to set `tags`              | yes      |                                                          |
+| **`suggestions`**         | `Suggestion[]`                                                            | All possible suggestions                                                              | no       | `[]`                                                     |
+| **`suggestionExtractor`** | `(suggestion: Suggestion) => string`                                      | determines which property of `suggestions` is displayed                               | no       | uses `labelExtractor`                                    |
+| **`onSuggestionPress`**   | `(suggestion: Suggestion) => void`                                        | called when suggestion is pressed                                                     | no       | calls `onChangeTags` with `[...tags, pressedSuggestion]` |
+| **`onTagPress`**          | `(tag: Tag) => void`                                                      | called when tag is pressed                                                            | no       | calls `onChangeTags` with the pressed tag removed        |
+| **`renderSuggestion`**    | `(suggestion: Suggestion, onPress: (tag: Suggestion) => void) => Element` | renders a custom suggestion component                                                 | no       |                                                          |
+| **`renderTag`**           | `(tag: Tag, onPress: (tag: Tag) => void) => Element`                      | renders a custom tag component                                                        | no       |                                                          |
+| **`filterSuggestions`**   | `(text: string) => Suggestion[]`                                          | filters suggestions based on users text input                                         | no       |                                                          |
+| **`inputProps`**          | `TextInput` props                                                         | any additional props for `TextInput`                                                  | no       |                                                          |
+| **`flatListProps`**       | `FlatList` props                                                          | any additional props for `FlatList`                                                   | no       |                                                          |
+| **`allowCustomTags`**     | `boolean`                                                                 | whether or not to allow the user to create a Tag that doesn't come from `suggestions` | no       | `true`                                                   |
+| **`parseChars`**          | `string[]`                                                                | an array of characters that should trigger a new tag and clear the TextInput          | no       | `[',', ' ', ';', '\n']`                                  |
+| **`onAddNewTag`**         | `(userInput: string) => void`                                             | called when the user types a character in `parseChars`                                | no       | calls `onChangeTags` with `[...tags, userInputText]`     |
 
 ### Style Props
 
 No style props are required.
 
-| Prop                           | Description                                                                              |
-| ------------------------------ | ---------------------------------------------------------------------------------------- |
-| **`containerStyle`**           | The outmost container which contains the `TextInput` and the `FlatList` of `suggestions` |
-| **`tagContainerStyle`**        | Container for the `tags` and the `TextInput`                                             |
-| **`inputContainerStyle`**      | Container around the `TextInput`                                                         |
-| **`inputStyle`**               | Applied to the `TextInput` directly                                                      |
-| **`tagStyle`**                 | Applied to each tag                                                                      |
-| **`tagTextStyle`**             | Applied to the tag label                                                                 |
-| **`suggestionStyle`**          | Applied to each suggestion                                                               |
-| **`suggestionContainerStyle`** | Applied to the `FlatList` which renders `suggestions`                                    |
-| **`suggestionTextStyle`**      | Applied to the suggestion label                                                          |
+| Prop                    | Description                                                                         |
+|-------------------------|-------------------------------------------------------------------------------------|
+| **`containerStyle`**    | style for the outer-most View that houses both the tagContainer and suggestion list |
+| **`tagContainerStyle`** | Container for the `tags` and the `TextInput`                                        |
+| **`inputStyle`**        | Applied to the `TextInput` directly                                                 |
+| **`flatListStyle`**     | Applied to the `FlatList` which renders suggestions                                 |
 
 ## Contributing
 
