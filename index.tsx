@@ -79,6 +79,9 @@ export type AutocompleteTagsProps = {
 
   /** styles for the FlatList that renders suggestions */
   flatListStyle?: ViewStyle;
+
+  /** styles for the container View of FlatList that renders suggestions */
+  flatListContainerStyle?: ViewStyle;
 };
 
 export const AutocompleteTags = ({
@@ -99,6 +102,7 @@ export const AutocompleteTags = ({
   tagContainerStyle,
   inputStyle,
   flatListStyle,
+  flatListContainerStyle,
   inputProps,
   flatListProps,
 }: AutocompleteTagsProps) => {
@@ -180,7 +184,7 @@ export const AutocompleteTags = ({
   return (
     <View style={[styles.container, containerStyle]}>
       <View style={[styles.tagContainer, tagContainerStyle]}>
-        {tags.map((a) => renderTagComponent(a))}
+        {tags.map(renderTagComponent)}
         <TextInput
           value={text}
           onKeyPress={onKeyPress}
@@ -190,10 +194,10 @@ export const AutocompleteTags = ({
           {...inputProps}
         />
       </View>
-      <View>
+      <View style={flatListContainerStyle}>
         <FlatList
           data={getSuggestions()}
-          keyExtractor={(a) => extractor(a)}
+          keyExtractor={extractor}
           renderItem={renderSuggestionComponent}
           keyboardShouldPersistTaps="handled"
           style={[styles.list, flatListStyle]}

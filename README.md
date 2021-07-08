@@ -84,12 +84,13 @@ export default SimpleExample;
 
 No style props are required.
 
-| Prop                    | Description                                                                         |
-|-------------------------|-------------------------------------------------------------------------------------|
-| **`containerStyle`**    | style for the outer-most View that houses both the tagContainer and suggestion list |
-| **`tagContainerStyle`** | Container for the `tags` and the `TextInput`                                        |
-| **`inputStyle`**        | Applied to the `TextInput` directly                                                 |
-| **`flatListStyle`**     | Applied to the `FlatList` which renders suggestions                                 |
+| Prop                              | Description                                                                         |
+|-----------------------------------|-------------------------------------------------------------------------------------|
+| **`containerStyle`**              | style for the outer-most View that houses both the tagContainer and suggestion list |
+| **`tagContainerStyle`**           | Container for the `tags` and the `TextInput`                                        |
+| **`inputStyle`**                  | Applied to the `TextInput` directly                                                 |
+| **`flatListStyle`**               | Applied to the `FlatList` which renders suggestions                                 |
+| **`flatListContainerStyle`**      | Applied to the container `View` of `FlatList` which renders suggestions             |
 
 ## Contributing
 
